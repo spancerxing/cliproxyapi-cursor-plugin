@@ -7,7 +7,7 @@ Go 原生插件，运行时无需 Node.js。
 
 ## 商城安装
 
-`v0.1.0` Release 发布后，可添加本仓库的第三方商城源：
+Release 发布后，可添加本仓库的第三方商城源：
 
 ```yaml
 plugins:
@@ -17,7 +17,7 @@ plugins:
     - "https://raw.githubusercontent.com/spancerxing/cliproxyapi-cursor-plugin/main/registry.json"
 ```
 
-在 CPA 商城安装 **Cursor (spancerxing)**。提供 Linux AMD64/ARM64 和 Windows AMD64 包，
+在 CPA 商城安装 **Cursor(Oauth)**。提供 Linux AMD64/ARM64 和 Windows AMD64 包，
 由 CPA 按运行平台下载；Docker 按容器的 Linux 架构选择。运行时不需要构建工具。
 Docker 部署请挂载可写的插件目录。官方索引收录后可省略第三方源配置。
 
@@ -67,7 +67,17 @@ curl "http://127.0.0.1:8317/v8/management/oauth/status?state=$STATE" \
   -H "Authorization: Bearer $CPA_MANAGEMENT_KEY"
 ```
 
-也可在 CPA 导入 Cursor Dashboard API Key 凭据：
+### API Key 登录
+
+安装插件后，在 CPA 的插件资源菜单打开 **Cursor(Oauth)**，
+填写 CPA 管理密钥、Cursor API Key 和可选的账号名称，点击“验证并保存”。
+插件先验证 API Key，成功后由 CPA 保存账号；刷新账号和模型列表即可使用。
+页面不保存浏览器中的密钥。浏览器授权入口继续保留。
+
+默认资源地址为 `http://你的CPA地址/v0/resource/plugins/spancerxing-cursor/login`；
+如果 CPA 使用其他资源前缀，以管理面板中的资源链接为准。
+
+也可在 CPA 导入 Cursor API Key 凭据：
 
 ```json
 {

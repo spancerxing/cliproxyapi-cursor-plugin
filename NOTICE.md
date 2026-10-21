@@ -21,3 +21,8 @@ installing, building, testing and running the native plugin do not.
 
 The native protocol keeps the upstream MCP namespace `magpie` for wire and
 transcript compatibility. This does not launch or require the magpie app.
+
+`assets/cursor.png` is the unmodified `APP_ICON_25D_LIGHT.png` from Cursor's
+official brand asset archive: https://cursor.com/brand (retrieved 2026-10-21).
+Cursor's brand assets remain the property of their respective owner and are
+not covered by this project's MIT license. This is a community integration.

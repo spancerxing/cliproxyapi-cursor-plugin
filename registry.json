@@ -3,8 +3,8 @@
   "plugins": [
     {
       "id": "spancerxing-cursor",
-      "name": "Cursor (spancerxing)",
-      "description": "Cursor provider with browser login, streaming Chat Completions, images, tool calls and quota reporting through CPA host HTTP callbacks.",
+      "name": "Cursor(Oauth)",
+      "description": "Cursor provider with browser and API key login, streaming Chat Completions, images, tool calls and quota reporting through CPA host HTTP callbacks.",
       "author": "spancerxing",
       "version": "0.1.0",
       "repository": "https://github.com/spancerxing/cliproxyapi-cursor-plugin",
@@ -15,8 +15,10 @@
         "Cursor",
         "OAuth",
         "Streaming",
-        "Quota"
-      ]
+        "Quota",
+        "API Key"
+      ],
+      "logo": "https://raw.githubusercontent.com/spancerxing/cliproxyapi-cursor-plugin/main/assets/cursor.png"
     }
   ]
 }

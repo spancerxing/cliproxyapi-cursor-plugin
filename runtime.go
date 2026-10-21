@@ -16,6 +16,8 @@ import (
 )
 
 const version = "0.1.0"
+const pluginID = "spancerxing-cursor"
+const pluginLogo = "https://raw.githubusercontent.com/spancerxing/cliproxyapi-cursor-plugin/main/assets/cursor.png"
 const cursorAPI = "https://api2.cursor.sh"
 const clientVersion = "cli-2026.09.23-86fc751"
 const maxWireBytes = 64 << 20
@@ -73,6 +75,12 @@ func errorEnvelope(err error) []byte {
 }
 
 type rpcRequest struct {
+	BasePath         string
+	ResourceBasePath string
+	Method           string
+	Path             string
+	Body             []byte
+
 	Provider       string
 	AuthID         string
 	AuthProvider   string
@@ -117,15 +125,17 @@ func parseRequest(raw []byte, method string) (rpcRequest, error) {
 }
 
 type pluginRuntime struct {
-	ctx    context.Context
-	cancel context.CancelFunc
-	mu     sync.Mutex
-	closed bool
-	scopes map[*requestScope]struct{}
-	logins map[string]*loginFlow
-	models map[string]modelCache
-	keys   map[string]keyCache
-	now    func() time.Time
+	ctx            context.Context
+	cancel         context.CancelFunc
+	mu             sync.Mutex
+	closed         bool
+	scopes         map[*requestScope]struct{}
+	logins         map[string]*loginFlow
+	managementBase string
+	resourceBase   string
+	models         map[string]modelCache
+	keys           map[string]keyCache
+	now            func() time.Time
 }
 
 func newRuntime() *pluginRuntime {
@@ -173,6 +183,10 @@ func dispatch(p *pluginRuntime, method string, raw json.RawMessage, host hostCal
 		value = map[string]any{"supported_providers": []string{"cursor"}, "display_name": "Cursor subscription", "supports_reset": false}
 	case "quota.reset", "executor.count_tokens", "executor.http_request":
 		err = failure(501, "Cursor does not support this operation: %s", method)
+	case "management.register":
+		value = p.registerManagement(req)
+	case "management.handle":
+		value, err = p.handleManagement(scope, req)
 	case "auth.parse":
 		value, err = p.parseAuth(req)
 	case "auth.login.start":
@@ -211,7 +225,7 @@ func dispatch(p *pluginRuntime, method string, raw json.RawMessage, host hostCal
 	return resultEnvelope(value)
 }
 func registration() any {
-	return map[string]any{"schema_version": 1, "metadata": map[string]any{"Name": "Cursor (spancerxing)", "Version": version, "Author": "spancerxing", "GitHubRepository": "https://github.com/spancerxing/cliproxyapi-cursor-plugin", "ConfigFields": []any{}}, "capabilities": map[string]any{"auth_provider": true, "model_provider": true, "quota_provider": true, "executor": true, "executor_model_scope": "oauth", "executor_input_formats": []string{"chat-completions"}, "executor_output_formats": []string{"chat-completions"}}}
+	return map[string]any{"schema_version": 1, "metadata": map[string]any{"Name": "Cursor(Oauth)", "Version": version, "Author": "spancerxing", "GitHubRepository": "https://github.com/spancerxing/cliproxyapi-cursor-plugin", "Logo": pluginLogo, "ConfigFields": []any{}}, "capabilities": map[string]any{"management_api": true, "auth_provider": true, "model_provider": true, "quota_provider": true, "executor": true, "executor_model_scope": "oauth", "executor_input_formats": []string{"chat-completions"}, "executor_output_formats": []string{"chat-completions"}}}
 }
 func randomID() string {
 	var b [16]byte

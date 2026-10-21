@@ -87,6 +87,9 @@ func authRecord(auth credential, name, label string, extra map[string]any) map[s
 	}
 	stored["type"] = "cursor"
 	stored["cursor_auth"] = auth
+	if label != "" {
+		stored["label"] = label
+	}
 	if name == "" {
 		name = "cursor-" + digest(identity)[:16] + ".json"
 	}
@@ -200,6 +203,9 @@ func (p *pluginRuntime) startLogin(s *requestScope, req rpcRequest) (any, error)
 	mode := str(req.Metadata["mode"])
 	if mode == "" {
 		mode = "browser"
+		if strings.TrimSpace(str(req.Metadata["api_key"])) != "" {
+			mode = "api"
+		}
 	}
 	if mode != "browser" && mode != "cli" && mode != "api" {
 		return nil, failure(400, "Cursor login mode must be browser, cli or api")
@@ -233,8 +239,8 @@ func (p *pluginRuntime) startLogin(s *requestScope, req rpcRequest) (any, error)
 		}
 		flow.result = map[string]any{"Status": "success", "Auth": authRecord(credential{Type: "oauth", Refresh: "cursor-agent"}, "", "Cursor CLI", nil)}
 	case "api":
-		key := str(req.Metadata["api_key"])
-		if key == "" {
+		key := strings.TrimSpace(str(req.Metadata["api_key"]))
+		if key == "" || strings.ContainsAny(key, "\r\n\t ") {
 			return nil, failure(400, "Provide Metadata.api_key for API key import")
 		}
 		flow.result = map[string]any{"Status": "success", "Auth": authRecord(credential{Type: "api", Key: key}, "", "Cursor API key", nil)}

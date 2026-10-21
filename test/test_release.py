@@ -90,7 +90,7 @@ class StoreReleaseTests(unittest.TestCase):
         with patch.object(submit.sys, "argv", ["submit-store-pr.py", "--submit"]), \
                 patch.dict(submit.os.environ, {"GH_TOKEN": "synthetic-test-token"}), \
                 patch.object(submit, "api", return_value={
-                    "tag_name": "v0.1.0", "draft": False, "prerelease": False, "assets": [],
+                    "tag_name": "v" + self.plugin["version"], "draft": False, "prerelease": False, "assets": [],
                 }) as api:
             with self.assertRaisesRegex(AssertionError, "missing release asset"):
                 submit.main()

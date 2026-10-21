@@ -7,7 +7,7 @@ Uses CPA's global proxy and request logging. Native Go plugin; no Node.js runtim
 
 ## Store installation
 
-After the `v0.1.0` Release is published, add this third-party source:
+After a Release is published, add this third-party source:
 
 ```yaml
 plugins:
@@ -17,7 +17,7 @@ plugins:
     - "https://raw.githubusercontent.com/spancerxing/cliproxyapi-cursor-plugin/main/registry.json"
 ```
 
-Install **Cursor (spancerxing)** in CPA's store. Release builds target Linux AMD64/ARM64
+Install **Cursor(Oauth)** in CPA's store. Release builds target Linux AMD64/ARM64
 and Windows AMD64; CPA selects its runtime platform, including the Linux container architecture
 for Docker. No build tools are needed at runtime. Mount a writable plugin directory for Docker.
 Once listed in the official registry, the third-party source is optional.
@@ -69,7 +69,19 @@ curl "http://127.0.0.1:8317/v8/management/oauth/status?state=$STATE" \
   -H "Authorization: Bearer $CPA_MANAGEMENT_KEY"
 ```
 
-Alternatively, import a Cursor Dashboard API Key credential into CPA:
+### API key login
+
+After installing the plugin, open **Cursor(Oauth)** in CPA's plugin resources menu.
+Enter the CPA management key, a Cursor API key and an optional account label,
+then choose **验证并保存** (validate and save). The plugin validates the key with
+Cursor before asking CPA to persist the account. Refresh the account and model
+lists afterward. The page does not store keys in browser storage. Browser login
+remains available through CPA's Cursor login entry.
+
+The default resource URL is `/v0/resource/plugins/spancerxing-cursor/login`.
+Use the resource link in your management panel if CPA uses a different prefix.
+
+Alternatively, import a Cursor API key credential into CPA:
 
 ```json
 {

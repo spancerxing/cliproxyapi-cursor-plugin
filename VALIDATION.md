@@ -1,5 +1,15 @@
 # Native version 0.1.0 validation
 
+The initial release includes the Cursor(Oauth) display name, the official Cursor app icon,
+and a plugin resource page for API key login. The page calls a CPA-authenticated
+management route; keys are validated through the CPA HTTP callback and saved via
+`host.auth.save`. Synthetic tests cover successful persistence, invalid input,
+upstream rejection, network/server errors, and persistence failures. The C ABI
+smoke test also checks management registration and HTML resource rendering.
+Real Cursor credentials and a deployed CPA management UI still require testing.
+
+## Earlier validation history
+
 Store publishing support added on 2026-10-21:
 
 - Go race tests, `go vet`, and the updated native C ABI smoke test passed locally.
