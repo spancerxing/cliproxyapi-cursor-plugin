@@ -3,10 +3,17 @@ set -euo pipefail
 
 # Run inside the native-architecture manylinux2014 container with GOROOT mounted.
 export PATH="/usr/local/go/bin:$PATH"
+# manylinux installs Python under /opt/python, outside the default PATH.
+BUILD_PYTHON="${BUILD_PYTHON:-/opt/python/cp312-cp312/bin/python3}"
+if [[ ! -x "$BUILD_PYTHON" ]]; then
+  echo "Build Python not found: $BUILD_PYTHON" >&2
+  exit 1
+fi
+
 CGO_ENABLED=1 go build -buildvcs=false -trimpath -buildmode=c-shared \
   -o dist/spancerxing-cursor.so .
 
-python3 - <<'PY'
+"$BUILD_PYTHON" - <<'PY'
 import re
 import subprocess
 

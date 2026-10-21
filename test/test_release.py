@@ -1,8 +1,11 @@
 """Check the boundaries that could produce an uninstallable store release."""
 import importlib.util
 import json
+import os
 from pathlib import Path
 import struct
+import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -93,6 +96,27 @@ class StoreReleaseTests(unittest.TestCase):
                 submit.main()
             self.assertEqual(api.call_count, 1)
             self.assertTrue(api.call_args.args[0].endswith("/releases/latest"))
+
+    @unittest.skipIf(os.name == "nt", "Linux build script requires Bash")
+    def test_linux_build_uses_explicit_python_without_python_on_path(self):
+        bin_dir = self.directory / "bin"
+        bin_dir.mkdir()
+        readelf = bin_dir / "readelf"
+        readelf.write_text("#!/bin/sh\nprintf 'Name: GLIBC_2.17\\n'\n")
+        readelf.chmod(0o755)
+        env = dict(os.environ, PATH=str(bin_dir), BUILD_PYTHON=sys.executable)
+        # Stub only the Go compilation; exercise the actual shell script and
+        # Python/readelf glibc check in an environment with no python3 on PATH.
+        command = ["/bin/bash", "-c", 'go() { return 0; }; export -f go; exec /bin/bash "$1"',
+                   "test", str(ROOT / "scripts/build-linux.sh")]
+        result = subprocess.run(command, env=env, cwd=self.directory, capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("glibc <= 2.17", result.stdout)
+
+        readelf.write_text("#!/bin/sh\nprintf 'Name: GLIBC_2.28\\n'\n")
+        result = subprocess.run(command, env=env, cwd=self.directory, capture_output=True, text=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("glibc baseline exceeded", result.stderr)
 
 
 if __name__ == "__main__":
