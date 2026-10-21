@@ -35,12 +35,12 @@ jobs:
       run:
         shell: bash
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v6
         with:
           go-version: '1.26.x'
           cache: false
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
       - name: Configure Windows compiler
@@ -88,7 +88,7 @@ jobs:
         run: |
           python scripts/release.py package --goos "$TARGET_OS" --goarch "$TARGET_ARCH" \
             --library "dist/spancerxing-cursor.$LIBRARY_EXT"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: release-${{ matrix.goos }}-${{ matrix.goarch }}
           path: dist/release/*.zip
@@ -101,11 +101,11 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v7
         with:
           pattern: release-*
           path: dist/release
