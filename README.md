@@ -17,7 +17,7 @@ plugins:
     - "https://raw.githubusercontent.com/spancerxing/cliproxyapi-cursor-plugin/main/registry.json"
 ```
 
-Install **Cursor(Oauth)** in CPA's store. Release builds target Linux AMD64/ARM64
+Install **Cursor** in CPA's store. Release builds target Linux AMD64/ARM64
 and Windows AMD64; CPA selects its runtime platform, including the Linux container architecture
 for Docker. No build tools are needed at runtime. Mount a writable plugin directory for Docker.
 Once listed in the official registry, the third-party source is optional.
@@ -71,7 +71,7 @@ curl "http://127.0.0.1:8317/v8/management/oauth/status?state=$STATE" \
 
 ### API key login
 
-After installing the plugin, open **Cursor(Oauth)** in CPA's plugin resources menu.
+After installing the plugin, open **Cursor** in CPA's plugin resources menu.
 Enter the CPA management key, a Cursor API key and an optional account label,
 then choose **验证并保存** (validate and save). The plugin validates the key with
 Cursor before asking CPA to persist the account. Refresh the account and model

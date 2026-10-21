@@ -104,7 +104,7 @@ try:
     assert registered["ok"] and registered["result"]["capabilities"]["executor"]
     assert registered["result"]["capabilities"]["quota_provider"]
     assert registered["result"]["capabilities"]["management_api"]
-    assert registered["result"]["metadata"]["Name"] == "Cursor(Oauth)"
+    assert registered["result"]["metadata"]["Name"] == "Cursor"
     assert registered["result"]["metadata"]["Logo"].endswith("/assets/cursor.png")
     routes = call("management.register", {"BasePath": "/v0/management", "ResourceBasePath": "/v0/resource/plugins/spx-cursor"})["result"]
     assert routes["routes"][0]["Method"] == "POST"

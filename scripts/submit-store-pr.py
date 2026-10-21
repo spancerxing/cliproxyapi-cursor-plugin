@@ -53,8 +53,13 @@ def main():
              for target in ("linux_amd64", "linux_arm64", "windows_amd64")]
     title = f'Add {plugin["name"]} provider'
     release_url = plugin["repository"] + "/releases/tag/" + tag
-    body = f'''Adds a native Cursor provider with browser login, streaming Chat Completions,
-images, caller tool calls and quota reporting through CPA host HTTP callbacks.
+    body = f'''Adds **{plugin["name"]}** (`{plugin["id"]}`), a native Cursor provider for CPA.
+
+Features:
+- Browser OAuth login and API key login, including a plugin resource page for key validation and account creation.
+- Streaming Chat Completions, images and caller tool calls.
+- Subscription quota, reset times and on-demand spending reporting through CPA host HTTP callbacks.
+- Cursor's official app icon, with source attribution in the repository.
 
 Repository: {plugin["repository"]}
 Latest release: [{tag}]({release_url})
@@ -66,7 +71,11 @@ The release workflow runs Go race tests, go vet and C ABI smoke tests on each
 target runner, verifies the ZIP layouts and generates SHA256 checksums.
 Linux libraries target glibc 2.17 or newer. No Node.js runtime is required.
 
-Real Cursor credentials and full CPA server integration have not been tested.
+Quota rows use their window names, including `Total`, so explanatory text does
+not replace the row titles in the CPA management panel.
+
+Supersedes the closed PR #276 with the updated plugin ID, display name,
+author, icon and API key login support. This PR changes only `registry.json`.
 '''
     if not args.submit:
         print(title + "\n\n" + body + "\nRegistry entry:\n" + json.dumps(plugin, indent=2))

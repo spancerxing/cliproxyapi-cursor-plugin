@@ -28,7 +28,7 @@ func (p *pluginRuntime) registerManagement(req rpcRequest) any {
 	p.mu.Unlock()
 	return map[string]any{
 		"routes":    []any{map[string]any{"Method": "POST", "Path": base + "/plugins/" + pluginID + "/api-key"}},
-		"resources": []any{map[string]any{"Path": resource + "/login", "Menu": "Cursor(Oauth)", "Description": "Cursor API Key 登录"}},
+		"resources": []any{map[string]any{"Path": resource + "/login", "Menu": "Cursor", "Description": "Cursor API Key 登录"}},
 	}
 }
 

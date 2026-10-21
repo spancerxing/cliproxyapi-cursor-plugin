@@ -17,7 +17,7 @@ plugins:
     - "https://raw.githubusercontent.com/spancerxing/cliproxyapi-cursor-plugin/main/registry.json"
 ```
 
-在 CPA 商城安装 **Cursor(Oauth)**。提供 Linux AMD64/ARM64 和 Windows AMD64 包，
+在 CPA 商城安装 **Cursor**。提供 Linux AMD64/ARM64 和 Windows AMD64 包，
 由 CPA 按运行平台下载；Docker 按容器的 Linux 架构选择。运行时不需要构建工具。
 Docker 部署请挂载可写的插件目录。官方索引收录后可省略第三方源配置。
 
@@ -69,7 +69,7 @@ curl "http://127.0.0.1:8317/v8/management/oauth/status?state=$STATE" \
 
 ### API Key 登录
 
-安装插件后，在 CPA 的插件资源菜单打开 **Cursor(Oauth)**，
+安装插件后，在 CPA 的插件资源菜单打开 **Cursor**，
 填写 CPA 管理密钥、Cursor API Key 和可选的账号名称，点击“验证并保存”。
 插件先验证 API Key，成功后由 CPA 保存账号；刷新账号和模型列表即可使用。
 页面不保存浏览器中的密钥。浏览器授权入口继续保留。
