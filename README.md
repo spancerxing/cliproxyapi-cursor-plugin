@@ -5,7 +5,24 @@ Uses CPA's global proxy and request logging. Native Go plugin; no Node.js runtim
 
 [中文说明](README_CN.md)
 
-## Build
+## Store installation
+
+After the `v0.1.0` Release is published, add this third-party source:
+
+```yaml
+plugins:
+  enabled: true
+  dir: /opt/cpa/plugins
+  store-sources:
+    - "https://raw.githubusercontent.com/spancerxing/cliproxyapi-cursor-plugin/main/registry.json"
+```
+
+Install **Cursor (spancerxing)** in CPA's store. Release builds target Linux AMD64/ARM64
+and Windows AMD64; CPA selects its runtime platform, including the Linux container architecture
+for Docker. No build tools are needed at runtime. Mount a writable plugin directory for Docker.
+Once listed in the official registry, the third-party source is optional.
+
+## Build from source
 
 Requires Go 1.23+, a C compiler and Make. Build on the same OS and CPU architecture as CPA:
 
@@ -15,7 +32,7 @@ cd cliproxyapi-cursor-plugin
 make build
 ```
 
-Output in `dist/`: `cursor.so` on Linux, `cursor.dll` on Windows, or `cursor.dylib` on macOS.
+Output in `dist/`: `spancerxing-cursor.so` on Linux, `spancerxing-cursor.dll` on Windows, or `spancerxing-cursor.dylib` on macOS.
 Windows builds require a matching MinGW toolchain.
 
 ## Install in CPA
@@ -27,14 +44,14 @@ plugins:
   enabled: true
   dir: /opt/cpa/plugins
   configs:
-    cursor:
+    spancerxing-cursor:
       enabled: true
       priority: 1
 ```
 
 Set `dir` to the actual path, restart CPA and check its loading logs.
 For Docker, mount the plugin directory and use its container path.
-Only source is provided; CPA cannot load the source directory or a GitHub URL directly.
+Manual installation requires the compiled library; CPA cannot load a source directory or a GitHub repository URL directly.
 
 ## Sign in
 
@@ -75,3 +92,5 @@ make test
 See [VALIDATION.md](VALIDATION.md) for verification scope and limitations.
 Real Cursor accounts and full CPA integration have not yet been tested.
 Based on the MIT-licensed [magpie Cursor plugin](https://github.com/magpie-community/plugins/tree/main/packages/cursor); see [NOTICE.md](NOTICE.md) for attribution.
+
+See [docs/publishing.md](docs/publishing.md) for releases and official store submission.

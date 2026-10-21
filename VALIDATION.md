@@ -1,5 +1,18 @@
 # Native version 0.1.0 validation
 
+Store publishing support added on 2026-10-21:
+
+- Go race tests, `go vet`, and the updated native C ABI smoke test passed locally.
+- Six publishing tests passed: release completeness, checksum tampering, ZIP path
+  rejection, architecture mismatch, registry append/duplicate checks, and refusing
+  to submit a store PR when release assets are missing.
+- Workflow YAML, Bash syntax and Python syntax were checked locally.
+- Linux AMD64/ARM64 and Windows AMD64 builds are configured in GitHub Actions.
+  They have not yet run; their native libraries are not locally built or verified.
+  No macOS release archive is configured.
+- No GitHub Release or official store PR has been created by this change.
+  Shell access to GitHub fails DNS resolution in the current environment.
+
 Environment: macOS ARM64, Go 1.26.0. There are no third-party Go modules.
 
 Passed:

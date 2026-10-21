@@ -211,7 +211,7 @@ func dispatch(p *pluginRuntime, method string, raw json.RawMessage, host hostCal
 	return resultEnvelope(value)
 }
 func registration() any {
-	return map[string]any{"schema_version": 1, "metadata": map[string]any{"Name": "Cursor", "Version": version, "Author": "Community", "ConfigFields": []any{}}, "capabilities": map[string]any{"auth_provider": true, "model_provider": true, "quota_provider": true, "executor": true, "executor_model_scope": "oauth", "executor_input_formats": []string{"chat-completions"}, "executor_output_formats": []string{"chat-completions"}}}
+	return map[string]any{"schema_version": 1, "metadata": map[string]any{"Name": "Cursor (spancerxing)", "Version": version, "Author": "spancerxing", "GitHubRepository": "https://github.com/spancerxing/cliproxyapi-cursor-plugin", "ConfigFields": []any{}}, "capabilities": map[string]any{"auth_provider": true, "model_provider": true, "quota_provider": true, "executor": true, "executor_model_scope": "oauth", "executor_input_formats": []string{"chat-completions"}, "executor_output_formats": []string{"chat-completions"}}}
 }
 func randomID() string {
 	var b [16]byte

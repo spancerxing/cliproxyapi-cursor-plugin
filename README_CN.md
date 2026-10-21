@@ -5,7 +5,23 @@ Go 原生插件，运行时无需 Node.js。
 
 [English](README.md)
 
-## 构建
+## 商城安装
+
+`v0.1.0` Release 发布后，可添加本仓库的第三方商城源：
+
+```yaml
+plugins:
+  enabled: true
+  dir: /opt/cpa/plugins
+  store-sources:
+    - "https://raw.githubusercontent.com/spancerxing/cliproxyapi-cursor-plugin/main/registry.json"
+```
+
+在 CPA 商城安装 **Cursor (spancerxing)**。提供 Linux AMD64/ARM64 和 Windows AMD64 包，
+由 CPA 按运行平台下载；Docker 按容器的 Linux 架构选择。运行时不需要构建工具。
+Docker 部署请挂载可写的插件目录。官方索引收录后可省略第三方源配置。
+
+## 从源码构建
 
 需要 Go 1.23+、C 编译器和 Make。在与 CPA 相同的系统、CPU 架构下执行：
 
@@ -15,7 +31,7 @@ cd cliproxyapi-cursor-plugin
 make build
 ```
 
-产物位于 `dist/`：Linux 为 `cursor.so`，Windows 为 `cursor.dll`，macOS 为 `cursor.dylib`。
+产物位于 `dist/`：Linux 为 `spancerxing-cursor.so`，Windows 为 `spancerxing-cursor.dll`，macOS 为 `spancerxing-cursor.dylib`。
 Windows 构建需要匹配架构的 MinGW 工具链。
 
 ## 安装到 CPA
@@ -27,13 +43,13 @@ plugins:
   enabled: true
   dir: /opt/cpa/plugins
   configs:
-    cursor:
+    spancerxing-cursor:
       enabled: true
       priority: 1
 ```
 
 将 `dir` 改为实际路径，重启 CPA 后检查加载日志。Docker 部署需挂载插件目录，配置填写容器内路径。
-当前提供源码；仅放入源码或填写 GitHub 地址不会加载插件。
+手动安装需放入编译后的动态库；仅放入源码或填写 GitHub 仓库地址不会加载插件。
 
 ## 登录
 
@@ -73,3 +89,5 @@ make test
 
 验证范围与限制见 [VALIDATION.md](VALIDATION.md)。真实 Cursor 账号和完整 CPA 联调尚未验证。
 参考 [magpie Cursor 插件](https://github.com/magpie-community/plugins/tree/main/packages/cursor) 移植，采用 MIT 许可证，来源见 [NOTICE.md](NOTICE.md)。
+
+发布与官方索引提交流程见 [docs/publishing.md](docs/publishing.md)。

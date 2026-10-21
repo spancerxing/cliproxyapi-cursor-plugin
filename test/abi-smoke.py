@@ -103,7 +103,7 @@ try:
     registered = call("plugin.register", {})
     assert registered["ok"] and registered["result"]["capabilities"]["executor"]
     assert registered["result"]["capabilities"]["quota_provider"]
-    assert registered["result"]["metadata"]["Version"] == "0.1.0"
+    assert registered["result"]["metadata"]["Version"] == json.loads((Path(__file__).resolve().parents[1] / "registry.json").read_text())["plugins"][0]["version"]
     assert call("quota.identifier", {})["result"]["identifier"] == "cursor"
     assert call("quota.describe", {})["result"]["supported_providers"] == ["cursor"]
     assert call("quota.reset", {})["error"]["http_status"] == 501
