@@ -64,7 +64,7 @@ class StoreReleaseTests(unittest.TestCase):
             release.checksums(self.directory, self.plugin, complete=True)
 
     def test_unsafe_and_nested_zip_paths_are_rejected(self):
-        for name in ("../spancerxing-cursor.so", "dist/spancerxing-cursor.so", "/spancerxing-cursor.so"):
+        for name in ("../spx-cursor.so", "dist/spx-cursor.so", "/spx-cursor.so"):
             with self.subTest(name=name):
                 with zipfile.ZipFile(self.linux_archive(), "w") as archive:
                     archive.writestr(name, b"untrusted")

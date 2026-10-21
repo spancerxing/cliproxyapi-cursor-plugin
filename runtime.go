@@ -16,7 +16,7 @@ import (
 )
 
 const version = "0.1.0"
-const pluginID = "spancerxing-cursor"
+const pluginID = "spx-cursor"
 const pluginLogo = "https://raw.githubusercontent.com/spancerxing/cliproxyapi-cursor-plugin/main/assets/cursor.png"
 const cursorAPI = "https://api2.cursor.sh"
 const clientVersion = "cli-2026.09.23-86fc751"
@@ -225,7 +225,7 @@ func dispatch(p *pluginRuntime, method string, raw json.RawMessage, host hostCal
 	return resultEnvelope(value)
 }
 func registration() any {
-	return map[string]any{"schema_version": 1, "metadata": map[string]any{"Name": "Cursor(Oauth)", "Version": version, "Author": "spancerxing", "GitHubRepository": "https://github.com/spancerxing/cliproxyapi-cursor-plugin", "Logo": pluginLogo, "ConfigFields": []any{}}, "capabilities": map[string]any{"management_api": true, "auth_provider": true, "model_provider": true, "quota_provider": true, "executor": true, "executor_model_scope": "oauth", "executor_input_formats": []string{"chat-completions"}, "executor_output_formats": []string{"chat-completions"}}}
+	return map[string]any{"schema_version": 1, "metadata": map[string]any{"Name": "Cursor(Oauth)", "Version": version, "Author": "spx", "GitHubRepository": "https://github.com/spancerxing/cliproxyapi-cursor-plugin", "Logo": pluginLogo, "ConfigFields": []any{}}, "capabilities": map[string]any{"management_api": true, "auth_provider": true, "model_provider": true, "quota_provider": true, "executor": true, "executor_model_scope": "oauth", "executor_input_formats": []string{"chat-completions"}, "executor_output_formats": []string{"chat-completions"}}}
 }
 func randomID() string {
 	var b [16]byte

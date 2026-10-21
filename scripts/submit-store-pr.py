@@ -16,7 +16,7 @@ STORE = "router-for-me/CLIProxyAPI-Plugins-Store"
 
 
 def api(path, token, data=None, method=None):
-    headers = {"Accept": "application/vnd.github+json", "User-Agent": "spancerxing-cursor-release",
+    headers = {"Accept": "application/vnd.github+json", "User-Agent": "spx-cursor-release",
                "X-GitHub-Api-Version": "2022-11-28"}
     if token:
         headers["Authorization"] = f"Bearer {token}"
@@ -91,7 +91,7 @@ Real Cursor credentials and full CPA server integration have not been tested.
     assert set(entries) == set(names), "checksums must cover exactly the published platform ZIPs"
 
     user = api("/user", token)["login"]
-    branch = "add-spancerxing-cursor"
+    branch = "add-spx-cursor"
     existing = api(f"/repos/{STORE}/pulls?" + urlencode({"head": f"{user}:{branch}", "state": "open"}), token)
     if existing:
         print(existing[0]["html_url"])

@@ -11,14 +11,14 @@ if [[ ! -x "$BUILD_PYTHON" ]]; then
 fi
 
 CGO_ENABLED=1 go build -buildvcs=false -trimpath -buildmode=c-shared \
-  -o dist/spancerxing-cursor.so .
+  -o dist/spx-cursor.so .
 
 "$BUILD_PYTHON" - <<'PY'
 import re
 import subprocess
 
 output = subprocess.check_output(
-    ["readelf", "--version-info", "dist/spancerxing-cursor.so"], text=True
+    ["readelf", "--version-info", "dist/spx-cursor.so"], text=True
 )
 versions = [tuple(map(int, version)) for version in re.findall(r"GLIBC_(\d+)\.(\d+)", output)]
 assert versions and max(versions) <= (2, 17), "glibc baseline exceeded"

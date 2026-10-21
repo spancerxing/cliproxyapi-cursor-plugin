@@ -1,6 +1,6 @@
 GO ?= go
 GOOS := $(shell $(GO) env GOOS)
-PLUGIN_ID := spancerxing-cursor
+PLUGIN_ID := spx-cursor
 EXT := so
 ifeq ($(GOOS),darwin)
 EXT := dylib

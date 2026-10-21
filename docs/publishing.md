@@ -1,6 +1,6 @@
 # 发布
 
-插件 ID 为 `spancerxing-cursor`，登录 provider 和模型前缀为 `cursor`。
+插件 ID 为 `spx-cursor`，登录 provider 和模型前缀为 `cursor`。
 官方索引已存在其他作者的 `cursor` 插件，因此使用独立 ID。
 
 ## Release
@@ -20,9 +20,9 @@ git push origin v0.1.0
 GitHub Actions 会执行测试、各平台 C ABI 加载、ZIP 格式检查，并发布：
 
 ```text
-spancerxing-cursor_0.1.0_linux_amd64.zip
-spancerxing-cursor_0.1.0_linux_arm64.zip
-spancerxing-cursor_0.1.0_windows_amd64.zip
+spx-cursor_0.1.0_linux_amd64.zip
+spx-cursor_0.1.0_linux_arm64.zip
+spx-cursor_0.1.0_windows_amd64.zip
 checksums.txt
 ```
 

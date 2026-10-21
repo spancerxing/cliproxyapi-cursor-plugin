@@ -32,7 +32,7 @@ cd cliproxyapi-cursor-plugin
 make build
 ```
 
-Output in `dist/`: `spancerxing-cursor.so` on Linux, `spancerxing-cursor.dll` on Windows, or `spancerxing-cursor.dylib` on macOS.
+Output in `dist/`: `spx-cursor.so` on Linux, `spx-cursor.dll` on Windows, or `spx-cursor.dylib` on macOS.
 Windows builds require a matching MinGW toolchain.
 
 ## Install in CPA
@@ -44,7 +44,7 @@ plugins:
   enabled: true
   dir: /opt/cpa/plugins
   configs:
-    spancerxing-cursor:
+    spx-cursor:
       enabled: true
       priority: 1
 ```
@@ -78,7 +78,7 @@ Cursor before asking CPA to persist the account. Refresh the account and model
 lists afterward. The page does not store keys in browser storage. Browser login
 remains available through CPA's Cursor login entry.
 
-The default resource URL is `/v0/resource/plugins/spancerxing-cursor/login`.
+The default resource URL is `/v0/resource/plugins/spx-cursor/login`.
 Use the resource link in your management panel if CPA uses a different prefix.
 
 Alternatively, import a Cursor API key credential into CPA:

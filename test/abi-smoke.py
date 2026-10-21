@@ -106,7 +106,7 @@ try:
     assert registered["result"]["capabilities"]["management_api"]
     assert registered["result"]["metadata"]["Name"] == "Cursor(Oauth)"
     assert registered["result"]["metadata"]["Logo"].endswith("/assets/cursor.png")
-    routes = call("management.register", {"BasePath": "/v0/management", "ResourceBasePath": "/v0/resource/plugins/spancerxing-cursor"})["result"]
+    routes = call("management.register", {"BasePath": "/v0/management", "ResourceBasePath": "/v0/resource/plugins/spx-cursor"})["result"]
     assert routes["routes"][0]["Method"] == "POST"
     page = call("management.handle", {"Method": "GET", "Path": routes["resources"][0]["Path"]})["result"]
     assert page["StatusCode"] == 200

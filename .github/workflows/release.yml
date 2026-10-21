@@ -75,11 +75,11 @@ jobs:
           CGO_ENABLED: '1'
         run: |
           mkdir -p dist
-          go build -buildvcs=false -trimpath -buildmode=c-shared -o dist/spancerxing-cursor.dll .
+          go build -buildvcs=false -trimpath -buildmode=c-shared -o dist/spx-cursor.dll .
       - name: Verify C ABI on the target runner
         env:
           LIBRARY_EXT: ${{ matrix.ext }}
-        run: python test/abi-smoke.py "dist/spancerxing-cursor.$LIBRARY_EXT"
+        run: python test/abi-smoke.py "dist/spx-cursor.$LIBRARY_EXT"
       - name: Package
         env:
           TARGET_OS: ${{ matrix.goos }}
@@ -87,7 +87,7 @@ jobs:
           LIBRARY_EXT: ${{ matrix.ext }}
         run: |
           python scripts/release.py package --goos "$TARGET_OS" --goarch "$TARGET_ARCH" \
-            --library "dist/spancerxing-cursor.$LIBRARY_EXT"
+            --library "dist/spx-cursor.$LIBRARY_EXT"
       - uses: actions/upload-artifact@v6
         with:
           name: release-${{ matrix.goos }}-${{ matrix.goarch }}

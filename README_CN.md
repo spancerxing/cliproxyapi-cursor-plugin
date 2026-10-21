@@ -31,7 +31,7 @@ cd cliproxyapi-cursor-plugin
 make build
 ```
 
-产物位于 `dist/`：Linux 为 `spancerxing-cursor.so`，Windows 为 `spancerxing-cursor.dll`，macOS 为 `spancerxing-cursor.dylib`。
+产物位于 `dist/`：Linux 为 `spx-cursor.so`，Windows 为 `spx-cursor.dll`，macOS 为 `spx-cursor.dylib`。
 Windows 构建需要匹配架构的 MinGW 工具链。
 
 ## 安装到 CPA
@@ -43,7 +43,7 @@ plugins:
   enabled: true
   dir: /opt/cpa/plugins
   configs:
-    spancerxing-cursor:
+    spx-cursor:
       enabled: true
       priority: 1
 ```
@@ -74,7 +74,7 @@ curl "http://127.0.0.1:8317/v8/management/oauth/status?state=$STATE" \
 插件先验证 API Key，成功后由 CPA 保存账号；刷新账号和模型列表即可使用。
 页面不保存浏览器中的密钥。浏览器授权入口继续保留。
 
-默认资源地址为 `http://你的CPA地址/v0/resource/plugins/spancerxing-cursor/login`；
+默认资源地址为 `http://你的CPA地址/v0/resource/plugins/spx-cursor/login`；
 如果 CPA 使用其他资源前缀，以管理面板中的资源链接为准。
 
 也可在 CPA 导入 Cursor API Key 凭据：
