@@ -1,5 +1,10 @@
 # Native version 0.1.0 validation
 
+Execution format compatibility: CPA normalizes Chat Completions to `openai`.
+The executor accepts that canonical name and Chat Completions aliases. Host HTTP
+fixtures cover streaming and non-streaming execution with both `openai` and
+`chat-completions`; other protocol payloads remain rejected by the plugin.
+
 The initial release includes the Cursor display name, the official Cursor app icon,
 and a plugin resource page for API key login. The page calls a CPA-authenticated
 management route; keys are validated through the CPA HTTP callback and saved via

@@ -67,12 +67,13 @@ Latest release: [{tag}]({release_url})
 Release assets (ZIP root contains `{plugin["id"]}.so` or `{plugin["id"]}.dll`):
 ''' + "".join(f"\n- `{name}`" for name in names + ["checksums.txt"]) + '''
 
-The release workflow runs Go race tests, go vet and C ABI smoke tests on each
-target runner, verifies the ZIP layouts and generates SHA256 checksums.
-Linux libraries target glibc 2.17 or newer. No Node.js runtime is required.
+Validation:
+- The maintainer has completed self-testing on their CPA deployment.
+- The release workflow runs Go race tests, go vet and C ABI smoke tests on each target runner.
+- Release ZIP layouts, binary architectures and SHA256 checksums have been verified.
 
-Quota rows use their window names, including `Total`, so explanatory text does
-not replace the row titles in the CPA management panel.
+Linux libraries target glibc 2.17 or newer. No Node.js runtime is required.
+Both login methods are provided by the plugin; no CPA source changes are required.
 
 Supersedes the closed PR #276 with the updated plugin ID, display name,
 author, icon and API key login support. This PR changes only `registry.json`.

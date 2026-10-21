@@ -120,6 +120,14 @@ try:
     assert parsed["ok"] and parsed["result"]["Auth"]["Provider"] == "cursor"
     assert call("model.static", {})["result"]["Models"] == []
     assert call("executor.count_tokens", {})["error"]["http_status"] == 501
+    # CPA's canonical "openai" name must reach credential validation rather
+    # than fail at the format guard, for both executor entry points.
+    for method in ("executor.execute", "executor.execute_stream"):
+        result = call(method, {
+            "Format": "openai", "stream_id": "format-check",
+            "Payload": base64.b64encode(b'{"messages":[{"role":"user","content":"hello"}]}').decode(),
+        })
+        assert result["error"]["http_status"] == 401, result
     oauth = {"type": "cursor", "cursor_auth": {"type": "oauth", "access": "synthetic-abi-token", "refresh": "none", "expires": 9999999999999}}
     quota = call("quota.fetch", {"host_callback_id": "abi-quota-context", "storage_json": base64.b64encode(json.dumps(oauth).encode()).decode()})
     assert quota["ok"], quota

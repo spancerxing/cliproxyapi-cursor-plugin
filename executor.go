@@ -33,9 +33,20 @@ type runState struct {
 
 var maxModeRequired = regexp.MustCompile(`(?i)max[ _]mode[ _]required|requires max mode`)
 
+func isChatCompletionsFormat(format string) bool {
+	// CPA normalizes Chat Completions aliases to the SDK's "openai" format
+	// before invoking an executor. Keep aliases for older hosts and direct calls.
+	switch strings.ToLower(strings.TrimSpace(format)) {
+	case "", "openai", "chat-completions", "chat_completions", "openai-chat-completions", "openai_chat_completions":
+		return true
+	default:
+		return false
+	}
+}
+
 func (p *pluginRuntime) execute(s *requestScope, req rpcRequest, stream bool) (any, error) {
-	if req.Format != "" && req.Format != "chat-completions" {
-		return nil, failure(400, "Expected chat-completions format")
+	if !isChatCompletionsFormat(req.Format) {
+		return nil, failure(400, "Expected OpenAI Chat Completions format (openai); received %q", req.Format)
 	}
 	if stream && req.StreamID == "" {
 		return nil, failure(400, "Host stream_id is required")

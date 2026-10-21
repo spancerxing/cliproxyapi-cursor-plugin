@@ -218,51 +218,53 @@ func TestQuotaUsesHostHTTPCallbacks(t *testing.T) {
 }
 
 func TestCursorExecutionUsesHostRunSSEAndBidiAppend(t *testing.T) {
-	for _, stream := range []bool{false, true} {
-		t.Run(fmt.Sprint(stream), func(t *testing.T) {
-			w := newTestRuntime(t)
-			host := newSyntheticHost(t, "execute-context")
-			payload := base64.StdEncoding.EncodeToString([]byte(`{"model":"fixture-model","messages":[{"role":"user","content":"hello"}]}`))
-			req, _ := json.Marshal(map[string]any{"host_callback_id": host.context, "StorageJSON": syntheticCredentials(), "Format": "chat-completions", "Model": "cursor/fixture-model", "Payload": payload, "stream_id": "downstream"})
-			method := "executor.execute"
-			if stream {
-				method = "executor.execute_stream"
-			}
-			raw := dispatch(w, method, req, host.call)
-			var response struct {
-				OK     bool                     `json:"ok"`
-				Result struct{ Payload []byte } `json:"result"`
-			}
-			if err := json.Unmarshal(raw, &response); err != nil {
-				t.Fatal(err)
-			}
-			if !response.OK {
-				t.Fatalf("execution failed: %s", raw)
-			}
-			if stream {
-				select {
-				case <-host.closed:
-				case <-time.After(5 * time.Second):
-					t.Fatal("stream never closed")
+	for _, format := range []string{"openai", "chat-completions"} {
+		for _, stream := range []bool{false, true} {
+			t.Run(fmt.Sprintf("%s/stream=%t", format, stream), func(t *testing.T) {
+				w := newTestRuntime(t)
+				host := newSyntheticHost(t, "execute-context")
+				payload := base64.StdEncoding.EncodeToString([]byte(`{"model":"fixture-model","messages":[{"role":"user","content":"hello"}]}`))
+				req, _ := json.Marshal(map[string]any{"host_callback_id": host.context, "StorageJSON": syntheticCredentials(), "Format": format, "Model": "cursor/fixture-model", "Payload": payload, "stream_id": "downstream"})
+				method := "executor.execute"
+				if stream {
+					method = "executor.execute_stream"
 				}
-			}
-			host.mu.Lock()
-			defer host.mu.Unlock()
-			output := response.Result.Payload
-			if stream {
-				output = host.chunks
-			}
-			if !strings.Contains(string(output), "host-routed reply") {
-				t.Fatalf("missing model reply: %s", output)
-			}
-			if stream && !strings.Contains(string(output), "[DONE]") {
-				t.Fatal("missing stream end")
-			}
-			joined := strings.Join(host.requests, "\n")
-			if !strings.Contains(joined, "RunSSE") || !strings.Contains(joined, "BidiAppend") {
-				t.Fatalf("model bypassed host HTTP transport: %s", joined)
-			}
-		})
+				raw := dispatch(w, method, req, host.call)
+				var response struct {
+					OK     bool                     `json:"ok"`
+					Result struct{ Payload []byte } `json:"result"`
+				}
+				if err := json.Unmarshal(raw, &response); err != nil {
+					t.Fatal(err)
+				}
+				if !response.OK {
+					t.Fatalf("execution failed: %s", raw)
+				}
+				if stream {
+					select {
+					case <-host.closed:
+					case <-time.After(5 * time.Second):
+						t.Fatal("stream never closed")
+					}
+				}
+				host.mu.Lock()
+				defer host.mu.Unlock()
+				output := response.Result.Payload
+				if stream {
+					output = host.chunks
+				}
+				if !strings.Contains(string(output), "host-routed reply") {
+					t.Fatalf("missing model reply: %s", output)
+				}
+				if stream && !strings.Contains(string(output), "[DONE]") {
+					t.Fatal("missing stream end")
+				}
+				joined := strings.Join(host.requests, "\n")
+				if !strings.Contains(joined, "RunSSE") || !strings.Contains(joined, "BidiAppend") {
+					t.Fatalf("model bypassed host HTTP transport: %s", joined)
+				}
+			})
+		}
 	}
 }
 

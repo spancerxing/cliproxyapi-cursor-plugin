@@ -15,6 +15,26 @@ import (
 	"testing"
 )
 
+func TestExecutorChatCompletionsFormatCompatibility(t *testing.T) {
+	for _, format := range []string{"", "openai", "chat-completions", "chat_completions", "openai-chat-completions", "openai_chat_completions", " OpenAI "} {
+		if !isChatCompletionsFormat(format) {
+			t.Errorf("rejected Chat Completions format %q", format)
+		}
+	}
+	p := newTestRuntime(t)
+	for _, format := range []string{"responses", "openai-response", "claude", "gemini"} {
+		for _, method := range []string{"executor.execute", "executor.execute_stream"} {
+			result := invokeNative(t, p, method, map[string]any{
+				"Format": format, "Payload": []byte(`{"messages":[{"role":"user","content":"hello"}]}`),
+			}, nil)
+			err := object(result["error"])
+			if result["ok"] != false || num(err["http_status"]) != 400 || !strings.Contains(str(err["message"]), "received") {
+				t.Fatalf("unsupported format %q was not rejected: %v", format, result)
+			}
+		}
+	}
+}
+
 func testUint(field int, n uint64) []byte {
 	return binary.AppendUvarint(binary.AppendUvarint(nil, uint64(field<<3)), n)
 }
