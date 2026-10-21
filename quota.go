@@ -70,10 +70,9 @@ func normalizedQuota(data, hard, plan map[string]any) (map[string]any, error) {
 		reset = time.UnixMilli(int64(end)).UTC().Format(time.RFC3339)
 	}
 	demand := demandOf(data, hard)
-	pooled := demand.kind == "fixed" || demand.kind == "unlimited"
 	buckets := []any{}
 	summary := []any{}
-	addBucket := func(name string, used float64, description string) {
+	addBucket := func(name string, used float64) {
 		if math.IsNaN(used) || math.IsInf(used, 0) {
 			return
 		}
@@ -81,19 +80,14 @@ func normalizedQuota(data, hard, plan map[string]any) (map[string]any, error) {
 		if reset != "" {
 			bucket["resetTime"] = reset
 		}
-		if description != "" {
-			bucket["description"] = description
-		}
+		// CPA panels may use description as the row title ahead of window.
+		// Keep the quota name in window without an overriding prose description.
 		buckets = append(buckets, bucket)
 	}
 	u := object(data["planUsage"])
 	for _, entry := range []struct{ name, key string }{{"Cursor Models", "autoPercentUsed"}, {"Other Models", "apiPercentUsed"}, {"Total", "totalPercentUsed"}} {
 		if raw, ok := u[entry.key]; ok && raw != nil {
-			description := ""
-			if pooled || entry.name == "Total" {
-				description = "Informational; does not independently block model access"
-			}
-			addBucket(entry.name, num(raw), description)
+			addBucket(entry.name, num(raw))
 		}
 	}
 	metric := func(key, label string, value float64) {
@@ -101,7 +95,7 @@ func normalizedQuota(data, hard, plan map[string]any) (map[string]any, error) {
 	}
 	switch demand.kind {
 	case "fixed":
-		addBucket("On-demand", 100*demand.used/demand.limit, "On-demand spending limit")
+		addBucket("On-demand", 100*demand.used/demand.limit)
 		metric("on_demand_spend", "On-demand spend", demand.used)
 		metric("on_demand_limit", "On-demand limit", demand.limit)
 		if demand.mine != nil {
@@ -204,7 +198,7 @@ func (p *pluginRuntime) botQuota(s *requestScope, token string) map[string]any {
 	if trial {
 		name += " (trial)"
 	}
-	bucket := map[string]any{"window": name, "remainingFraction": math.Max(0, math.Min(1, 1-num(used)/100)), "description": "Informational; Bot allowance does not control Cursor model access"}
+	bucket := map[string]any{"window": name, "remainingFraction": math.Max(0, math.Min(1, 1-num(used)/100))}
 	if reset, err := time.Parse(time.RFC3339, str(data["nextResetTimestampUtc"])); err == nil && paid {
 		bucket["resetTime"] = reset.UTC().Format(time.RFC3339)
 	}

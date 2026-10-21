@@ -59,3 +59,37 @@ func TestNativeOnDemandAndTeamPool(t *testing.T) {
 		t.Fatal(result)
 	}
 }
+
+func TestQuotaRowTitlesAndTotal(t *testing.T) {
+	for _, hard := range []map[string]any{
+		{"noUsageBasedAllowed": true},
+		{"hardLimit": 100.0},
+		{"hardLimit": 2147483647.0},
+	} {
+		result, err := normalizedQuota(map[string]any{
+			"planUsage": map[string]any{"autoPercentUsed": 78.0, "apiPercentUsed": 100.0, "totalPercentUsed": 80.0},
+		}, hard, nil)
+		if err != nil {
+			t.Fatal(err)
+		}
+		buckets := result["groups"].([]any)[0].(map[string]any)["buckets"].([]any)
+		want := []string{"Cursor Models", "Other Models", "Total"}
+		for i, raw := range buckets {
+			bucket := raw.(map[string]any)
+			title := str(bucket["description"])
+			if title == "" {
+				title = str(bucket["window"])
+			}
+			expected := "On-demand"
+			if i < len(want) {
+				expected = want[i]
+			}
+			if title != expected {
+				t.Fatalf("quota row title %q, want %q", title, expected)
+			}
+		}
+		if math.Abs(num(buckets[2].(map[string]any)["remainingFraction"])-0.2) > 1e-9 {
+			t.Fatal("total remaining fraction changed")
+		}
+	}
+}
