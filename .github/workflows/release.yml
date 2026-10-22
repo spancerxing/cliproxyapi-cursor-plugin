@@ -30,6 +30,14 @@ jobs:
             goos: windows
             goarch: amd64
             ext: dll
+          - runner: macos-15-intel
+            goos: darwin
+            goarch: amd64
+            ext: dylib
+          - runner: macos-15
+            goos: darwin
+            goarch: arm64
+            ext: dylib
     runs-on: ${{ matrix.runner }}
     defaults:
       run:
@@ -69,13 +77,14 @@ jobs:
           docker run --rm \
             -v "$PWD:/src" -v "$(go env GOROOT):/usr/local/go:ro" -w /src \
             "$BUILD_IMAGE" /bin/bash scripts/build-linux.sh
-      - name: Build Windows library
-        if: runner.os == 'Windows'
+      - name: Build Windows or macOS library
+        if: runner.os != 'Linux'
         env:
           CGO_ENABLED: '1'
+          LIBRARY_EXT: ${{ matrix.ext }}
         run: |
           mkdir -p dist
-          go build -buildvcs=false -trimpath -buildmode=c-shared -o dist/spx-cursor.dll .
+          go build -buildvcs=false -trimpath -buildmode=c-shared -o "dist/spx-cursor.$LIBRARY_EXT" .
       - name: Verify C ABI on the target runner
         env:
           LIBRARY_EXT: ${{ matrix.ext }}

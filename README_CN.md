@@ -17,7 +17,7 @@ plugins:
     - "https://raw.githubusercontent.com/spancerxing/cliproxyapi-cursor-plugin/main/registry.json"
 ```
 
-在 CPA 商城安装 **Cursor**。提供 Linux AMD64/ARM64 和 Windows AMD64 包，
+在 CPA 商城安装 **Cursor**。发布构建覆盖 Linux AMD64/ARM64、macOS AMD64/ARM64 和 Windows AMD64，
 由 CPA 按运行平台下载；Docker 按容器的 Linux 架构选择。运行时不需要构建工具。
 Docker 部署请挂载可写的插件目录。官方索引收录后可省略第三方源配置。
 

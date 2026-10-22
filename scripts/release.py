@@ -9,6 +9,8 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 TARGETS = {("linux", "amd64"): ("so", 62), ("linux", "arm64"): ("so", 183),
+           ("darwin", "amd64"): ("dylib", 0x01000007),
+           ("darwin", "arm64"): ("dylib", 0x0100000c),
            ("windows", "amd64"): ("dll", 0x8664)}
 
 
@@ -32,6 +34,10 @@ def check_binary(data, goos, goarch):
         assert data[:6] == b"\x7fELF\x02\x01", "expected a little-endian 64-bit ELF library"
         assert struct.unpack_from("<H", data, 16)[0] == 3, "expected an ELF shared library"
         assert struct.unpack_from("<H", data, 18)[0] == machine, "ELF architecture mismatch"
+    elif goos == "darwin":
+        assert data[:4] == b"\xcf\xfa\xed\xfe", "expected a little-endian 64-bit Mach-O library"
+        assert struct.unpack_from("<I", data, 4)[0] == machine, "Mach-O architecture mismatch"
+        assert struct.unpack_from("<I", data, 12)[0] == 6, "expected a Mach-O dynamic library"
     else:
         assert data[:2] == b"MZ", "expected a Windows DLL"
         offset = struct.unpack_from("<I", data, 0x3c)[0]

@@ -1,4 +1,27 @@
-# Native version 0.1.0 validation
+# Native version 0.1.1 validation
+
+## Store audit follow-up (2026-10-22)
+
+PR #277 was closed because the release lacked Darwin AMD64 and ARM64 binaries.
+The release matrix now includes native Intel and Apple Silicon macOS runners,
+with the same Go checks, C ABI smoke test and ZIP verification as other targets.
+Packaging verifies Mach-O architecture and dynamic-library type. Full-release
+checks and store submission require all five platform archives. The submission
+script uses a new branch to avoid reusing the closed PR's existing branch.
+
+Local validation: nine publishing tests passed, including rejection of a
+release that has Linux/Windows archives but lacks Darwin, missing-platform
+checks for all five targets, and invalid Mach-O architecture/type checks.
+Workflow YAML and submission preview were checked. A cached Go 1.26.0 toolchain
+was located outside PATH: Go race tests and go vet passed. The macOS ARM64
+dynamic library built successfully, passed the C ABI smoke test, and packaged
+as `spx-cursor_0.1.1_darwin_arm64.zip` with Mach-O verification.
+The complete five-platform release still needs to be built and published by CI
+before submitting a replacement store PR. Version 0.1.1 leaves the existing
+0.1.0 tag and release intact. Publishing is currently blocked by invalid local
+GitHub credentials (API 401 and Git push dry-run authentication failure).
+
+## Execution format compatibility
 
 Execution format compatibility: CPA normalizes Chat Completions to `openai`.
 The executor accepts that canonical name and Chat Completions aliases. Host HTTP

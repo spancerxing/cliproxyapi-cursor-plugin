@@ -17,8 +17,8 @@ plugins:
     - "https://raw.githubusercontent.com/spancerxing/cliproxyapi-cursor-plugin/main/registry.json"
 ```
 
-Install **Cursor** in CPA's store. Release builds target Linux AMD64/ARM64
-and Windows AMD64; CPA selects its runtime platform, including the Linux container architecture
+Install **Cursor** in CPA's store. Release builds target Linux AMD64/ARM64,
+macOS AMD64/ARM64 and Windows AMD64; CPA selects its runtime platform, including the Linux container architecture
 for Docker. No build tools are needed at runtime. Mount a writable plugin directory for Docker.
 Once listed in the official registry, the third-party source is optional.
 

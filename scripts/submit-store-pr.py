@@ -7,6 +7,7 @@ from pathlib import Path
 import re
 import sys
 import time
+from release import TARGETS
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
@@ -49,8 +50,8 @@ def main():
     plugin = json.loads((ROOT / "registry.json").read_text())["plugins"][0]
     owner_repo = plugin["repository"].removeprefix("https://github.com/")
     tag = "v" + plugin["version"]
-    names = [f'{plugin["id"]}_{plugin["version"]}_{target}.zip'
-             for target in ("linux_amd64", "linux_arm64", "windows_amd64")]
+    names = [f'{plugin["id"]}_{plugin["version"]}_{goos}_{goarch}.zip'
+             for goos, goarch in TARGETS]
     title = f'Add {plugin["name"]} provider'
     release_url = plugin["repository"] + "/releases/tag/" + tag
     body = f'''Adds **{plugin["name"]}** (`{plugin["id"]}`), a native Cursor provider for CPA.
@@ -64,7 +65,7 @@ Features:
 Repository: {plugin["repository"]}
 Latest release: [{tag}]({release_url})
 
-Release assets (ZIP root contains `{plugin["id"]}.so` or `{plugin["id"]}.dll`):
+Release assets (ZIP root contains `{plugin["id"]}.so`, `{plugin["id"]}.dylib` or `{plugin["id"]}.dll`):
 ''' + "".join(f"\n- `{name}`" for name in names + ["checksums.txt"]) + '''
 
 Validation:
@@ -75,8 +76,9 @@ Validation:
 Linux libraries target glibc 2.17 or newer. No Node.js runtime is required.
 Both login methods are provided by the plugin; no CPA source changes are required.
 
-Supersedes the closed PR #276 with the updated plugin ID, display name,
-author, icon and API key login support. This PR changes only `registry.json`.
+Supersedes the closed PR #277 by adding the missing Darwin/macOS AMD64 and
+ARM64 binaries. The release covers all five required platform targets.
+This PR changes only `registry.json`.
 '''
     if not args.submit:
         print(title + "\n\n" + body + "\nRegistry entry:\n" + json.dumps(plugin, indent=2))
@@ -101,7 +103,7 @@ author, icon and API key login support. This PR changes only `registry.json`.
     assert set(entries) == set(names), "checksums must cover exactly the published platform ZIPs"
 
     user = api("/user", token)["login"]
-    branch = "add-spx-cursor"
+    branch = f'add-spx-cursor-v{plugin["version"]}-full-platform'
     existing = api(f"/repos/{STORE}/pulls?" + urlencode({"head": f"{user}:{branch}", "state": "open"}), token)
     if existing:
         print(existing[0]["html_url"])
